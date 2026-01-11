@@ -20,6 +20,15 @@ export type SandboxInfo = {
   sandboxId: string;
   createdAt: number;
   timeout: number;
+  currentBranch?: string;
+};
+
+export type RepoInfo = {
+  owner: string;
+  repo: string;
+  fullName: string;
+  cloneUrl: string;
+  branch: string;
 };
 
 type ChatState = {
@@ -33,6 +42,9 @@ type ChatContextValue = {
   sandboxInfo: SandboxInfo | null;
   setSandboxInfo: (info: SandboxInfo) => void;
   clearSandboxInfo: () => void;
+  repoInfo: RepoInfo | null;
+  setRepoInfo: (info: RepoInfo) => void;
+  clearRepoInfo: () => void;
 };
 
 const ChatContext = createContext<ChatContextValue | undefined>(undefined);
@@ -88,9 +100,28 @@ export function ChatProvider({
     setSandboxInfoState(null);
   }, []);
 
+  const [repoInfo, setRepoInfoState] = useState<RepoInfo | null>(null);
+
+  const setRepoInfo = useCallback((info: RepoInfo) => {
+    setRepoInfoState(info);
+  }, []);
+
+  const clearRepoInfo = useCallback(() => {
+    setRepoInfoState(null);
+  }, []);
+
   return (
     <ChatContext.Provider
-      value={{ chat, state, sandboxInfo, setSandboxInfo, clearSandboxInfo }}
+      value={{
+        chat,
+        state,
+        sandboxInfo,
+        setSandboxInfo,
+        clearSandboxInfo,
+        repoInfo,
+        setRepoInfo,
+        clearRepoInfo,
+      }}
     >
       {children}
     </ChatContext.Provider>
