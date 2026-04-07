@@ -368,13 +368,6 @@ export function CheckRunsList({
               )}
             </span>
           </div>
-
-          {!showLoading &&
-            (detailsOpen ? (
-              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-            ) : (
-              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-            ))}
         </button>
 
         {/* Action buttons — outside the toggle button */}
@@ -407,6 +400,14 @@ export function CheckRunsList({
             )}
           </div>
         )}
+
+        {/* Chevron — always on the far right */}
+        {!showLoading &&
+          (detailsOpen ? (
+            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+          ) : (
+            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+          ))}
       </div>
 
       {/* ---- Expanded detail list ---- */}
