@@ -11,6 +11,7 @@ import {
   GitMerge,
   GitPullRequest,
   GitPullRequestClosed,
+  Globe,
   Loader2,
   SquareDot,
   SquareMinus,
@@ -1111,10 +1112,8 @@ function InlineMergePanel({
 /* ------------------------------------------------------------------ */
 
 export function GitPanel(props: GitPanelProps) {
-  const { gitPanelOpen, gitPanelTab, setGitPanelTab, diffScope, setDiffScope } =
+  const { gitPanelTab, setGitPanelTab, diffScope, setDiffScope } =
     useGitPanel();
-
-  if (!gitPanelOpen) return null;
 
   const {
     session,
@@ -1182,37 +1181,31 @@ export function GitPanel(props: GitPanelProps) {
               {session.branch}
             </span>
           ) : null}
+
+          {/* Preview deployment button */}
+          {showPreviewButton && previewTargetUrl && (
+            /* oxlint-disable-next-line nextjs/no-html-link-for-pages */
+            <a
+              href={previewTargetUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs font-medium text-foreground transition-colors hover:bg-accent"
+            >
+              <Globe
+                className={cn(
+                  "h-3.5 w-3.5",
+                  !isDeploymentStale && "text-green-500",
+                  isDeploymentStale && "text-amber-500 animate-pulse",
+                )}
+              />
+              Preview
+              <ExternalLink className="h-3 w-3 text-muted-foreground" />
+            </a>
+          )}
         </div>
 
-        {/* Right: preview / create-repo actions */}
-        <div className="flex shrink-0 items-center gap-2">
-          {showPreviewButton && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-7 text-xs"
-              onClick={() => {
-                if (!previewTargetUrl) {
-                  return;
-                }
-
-                window.open(previewTargetUrl, "_blank", "noopener,noreferrer");
-              }}
-              disabled={isDeploymentStale && !buildingDeploymentUrl}
-            >
-              {isDeploymentStale ? (
-                <>
-                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                  Deploying…
-                </>
-              ) : (
-                <>
-                  <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                  Preview
-                </>
-              )}
-            </Button>
-          )}
+        {/* Right: Create repo button if no repo */}
+        <div className="shrink-0">
           {!hasRepo && supportsRepoCreation && (
             <Button
               size="sm"
