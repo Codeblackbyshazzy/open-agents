@@ -2,6 +2,7 @@
 
 import {
   ArrowLeft,
+  Cable,
   LogOut,
   Menu,
   Settings as SettingsIcon,
@@ -19,23 +20,45 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { AccountsSectionSkeleton } from "./accounts-section";
 import { LeaderboardSectionSkeleton } from "./leaderboard-section";
 import { ModelVariantsSectionSkeleton } from "./model-variants-section";
 import { PreferencesSectionSkeleton } from "./preferences-section";
-import { ProfileSectionSkeleton } from "./profile-section";
-import { UsageSectionSkeleton } from "./usage-section";
 
 /** Skeleton shown while auth is loading for the combined profile page */
 function ProfilePageSkeleton() {
   return (
-    <>
-      <ProfileSectionSkeleton />
-      <AccountsSectionSkeleton />
-      <UsageSectionSkeleton />
-    </>
+    <div className="flex flex-col gap-8 lg:flex-row lg:gap-10">
+      <div className="w-full shrink-0 lg:w-56">
+        <div className="space-y-6">
+          <div className="flex flex-col items-center gap-3">
+            <Skeleton className="h-20 w-20 rounded-full" />
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+        </div>
+      </div>
+      <div className="min-w-0 flex-1 space-y-6">
+        <Skeleton className="h-[96px] w-full rounded-md" />
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-20 rounded-xl" />
+          ))}
+        </div>
+      </div>
+    </div>
   );
+}
+
+function ConnectionsPageSkeleton() {
+  return <AccountsSectionSkeleton />;
 }
 
 const sidebarItems = [
@@ -44,6 +67,12 @@ const sidebarItems = [
     label: "Profile",
     href: "/settings/profile",
     icon: User,
+  },
+  {
+    id: "connections",
+    label: "Connections",
+    href: "/settings/connections",
+    icon: Cable,
   },
   {
     id: "preferences",
@@ -189,11 +218,12 @@ function SettingsLayout({
         </div>
         <div
           className={cn(
-            "mx-auto space-y-6 px-4 py-6 md:px-6 md:py-8",
-            pathname === "/settings/profile" ||
-              pathname === "/settings/leaderboard"
-              ? "max-w-4xl"
-              : "max-w-2xl",
+            "mx-auto space-y-6 px-3 py-5 md:px-4 md:py-6",
+            pathname === "/settings/profile"
+              ? "max-w-5xl"
+              : pathname === "/settings/leaderboard"
+                ? "max-w-4xl"
+                : "max-w-2xl",
           )}
         >
           {children}
@@ -208,7 +238,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const activeItem = sidebarItems.find((item) => item.href === pathname);
   const fallbackTitle = activeItem?.label ?? "Profile";
   const fallbackContent =
-    activeItem?.id === "preferences" ? (
+    activeItem?.id === "connections" ? (
+      <ConnectionsPageSkeleton />
+    ) : activeItem?.id === "preferences" ? (
       <PreferencesSectionSkeleton />
     ) : activeItem?.id === "model-variants" ? (
       <ModelVariantsSectionSkeleton />

@@ -60,7 +60,7 @@ function GitHubIcon({ className }: { className?: string }) {
 
 function startGitHubInstallForOrg(githubId: number) {
   const params = new URLSearchParams({
-    next: "/settings/profile",
+    next: "/settings/connections",
     target_id: String(githubId),
   });
 
@@ -69,7 +69,7 @@ function startGitHubInstallForOrg(githubId: number) {
 
 function startGitHubInstallFromSettings() {
   const params = new URLSearchParams({
-    next: "/settings/profile",
+    next: "/settings/connections",
   });
   window.location.href = `/api/github/app/install?${params.toString()}`;
 }
